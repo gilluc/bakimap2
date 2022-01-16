@@ -158,6 +158,7 @@ for account in accounts['imap_accounts']:
 
             server.logout()
             print("\t" + '%s messages saved' % (backuped))
+            print ('--------------------------------------------------------------')
 
 # Closing file
 f.close()
