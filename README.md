@@ -1,7 +1,14 @@
 # bakimap2
-Python code to backup your IMAP accounts (really working and really FREE and opensource)
+Python code to backup your IMAP accounts (really working and really FREE and opensource).
+Bakimap2 is mainly bakimap with IMAP accounts details read from a json file.
+By default, bakimap2.py reads bakimap2.json.
+You can put another json file instead of bakimap2.json in command line parameter like :
 ```
-D:\GILLES\CIMAP>py bakimap.py
+D:\GILLES\CIMAP>py bakimap2.py another_file.json
+```
+Example of first run output :
+```
+D:\GILLES\CIMAP>py bakimap2.py
 Server : imap.me.com, Account : me@me.com, Mode : NEW
 Found folders:
         Spam
@@ -17,40 +24,21 @@ Folder : INBOX
 Folder : Sent
         55 messages found
         55 messages saved
+----------------------------------------
+Server : imap.you.com, Account : you@you.com, Mode : NEW
+Found folders:
+        Spam
+        Sent
+        INBOX
+Folder : INBOX
+        44 messages found
+        44 messages saved
+----------------------------------------
 D:\GILLES\CIMAP>
 ```
 
-# the story
-I just wanted to learn Python and to use it on deep learning with TensorFlow.
-The step was too large.
-As i have another need, i decided to switch.
-I didn't find any free opensource IMAP backup solution anywhere so i decided to build one.
-Everyone is aware that IMAP acounts need to be backed up ;-)
-
-# the needs
-- i have several IMAP accounts by different hosting companies to backup
-- i want to do it with Python
-- i want to recreate the same folder tree in my local disk as the folders tree in my IMAP account
-- as i want to run my script quite often, i need an INCREMENTAL backup
-- i want to save every message as a EML text file to be able to open it with my text editor of choice or any EML viewer
-
-# the result
-- i built a Python script !
-- the script can backup only one IMAP account with the choice of its folders
-- for each IMAP account, i duplicate the script under another name ...
-- the script creates a subfolder using the name of the account
-- the script creates a subfolder for each IMAP folder in the account subfolder
-- each message is a EML file
-- the script uses SSL protocol
-- you have the choice of INCREMENTAL backup (recommended) or complete REBUILD of account backup to mirror the IMAP server
-
-# my tests
-- i used Python 3.9 on Windows 10
-- i tested several accounts on [PlanetHoster](https://www.planethoster.com/fr/Hebergements-World) and [Free.fr](https://assistance.free.fr/articles/605)
-- i backuped hundreds of messages
-- i verified the messages using [Notepad++](https://notepad-plus-plus.org/downloads/v8.2/) and two free EML viewers i just found :
-- [dalecoop EML viewer](https://www.01net.com/telecharger/windows/Internet/internet_utlitaire/fiches/130608.html) is great to open EML file by double clic
-- [mitec mail viewer](https://mitec.cz/mailview.html) is great to open a folder containing EML files
+# more?
+just go to gilluc/bakimap!
 
 # dependency
 ```
@@ -58,13 +46,28 @@ pip install IMAPClient
 ```
 
 # now it's up to you
-- after downloading bakimap.py, you have to set some parameters (as usual) before using it
+After downloading bakimap.py, you have to set some parameters in bakimap2.json (as usual) before using it!
+Remember : 
+- "NEW" backup mode only saves new messages from last run (like incremental backup) : recommended!
+- "RESET" backup mode delete existing saved messages and saves all messages found on IMAP host to mirror the folders account (mainly for me when testing)
 
 ```
-# params
-HOST     = "imap.me.com"
-USERNAME = "me@me.com"
-PASSWORD = "$$##$$"
-FOLDERS  = ["INBOX", "Sent"]        # folder list to backup
-BACKUP   = "NEW"   # "NEW" to backup only new messages (INCREMENTAL, recommended) or "RESET" to backup all messages to match exactly what is in IMAP server
+{
+    "imap_accounts": [
+        {
+            "HOST"     : "imap.me.com",
+            "USERNAME" : "me@me.com",
+            "PASSWORD" : "$$##$$",
+            "FOLDERS"  : [ { "name": "INBOX" }, { "name": "Sent" } ],
+            "BACKUP"   : "NEW"
+        },
+        {
+            "HOST"     : "imap.you.com",
+            "USERNAME" : "you@you.com",
+            "PASSWORD" : "$$##$$",
+            "FOLDERS"  : [ { "name": "INBOX" } ],
+            "BACKUP"   : "NEW"
+        }
+    ]
+}
 ```
