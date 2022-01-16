@@ -1,12 +1,12 @@
 # bakimap2
-Python code to backup your IMAP accounts (really working and really FREE and opensource)
+Python code to backup your IMAP accounts (really working and really FREE and opensource).
 Bakimap2 is mainly bakimap with IMAP accounts details read from a json file.
 By default, bakimap2.py reads bakimap2.json.
-You can put another json file instead of bakimap2.json in command line parameter like 
+You can put another json file instead of bakimap2.json in command line parameter like :
 ```
 D:\GILLES\CIMAP>py bakimap2.py another_file.json
 ```
-First execution output:
+Example of first run output :
 ```
 D:\GILLES\CIMAP>py bakimap2.py
 Server : imap.me.com, Account : me@me.com, Mode : NEW
