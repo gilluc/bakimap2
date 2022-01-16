@@ -9,18 +9,12 @@ import os
 import re
 import ssl
 import sys
+import json
 import hashlib
 import datetime
 from imapclient import IMAPClient
 
-# params
-HOST     = "imap.me.com"
-USERNAME = "me@me.com"
-PASSWORD = "$$##$$"
-FOLDERS  = ["INBOX", "Sent"]        # folder list to backup
-BACKUP   = "NEW"   # "NEW" to backup only new messages or "RESET" to backup all messages to match exactly what is in IMAP server
-
-# build path to store emails in folder
+ # build path to store emails in folder
 def BuildPath(host, user, folder):
     path = './' + host
     if (os.path.isdir(path)==False):
@@ -110,46 +104,60 @@ def BuildFilename(body):
 
 # main -------------------------------------------------------------------------
 
+jsonfile = 'bakimap2.json'
 if len( sys.argv ) == 2:
-    BACKUP = sys.argv[1]
+    jsonfile = sys.argv[1]
 
 ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
 ssl_context.verify_mode = ssl.CERT_NONE
 
-with IMAPClient(HOST, ssl_context=ssl_context) as server:
-    print ('Server : ' + HOST + ', Account : ' + USERNAME + ', Mode : ' + BACKUP)
-    server.login(USERNAME, PASSWORD)
-    print ('Found folders: ')
-    folders = server.list_folders()
-    for folder in folders:
-        print ("\t" + folder[2])
-    server.logout()
-
-for cfolder in FOLDERS:
+# Opening JSON file
+f = open(jsonfile)
+accounts = json.load(f)
+for account in accounts['imap_accounts']:
+ 
+    HOST     = account['HOST']
+    USERNAME = account['USERNAME']
+    PASSWORD = account['PASSWORD']
+    FOLDERS  = account['FOLDERS']
+    BACKUP   = account['BACKUP']
+    
     with IMAPClient(HOST, ssl_context=ssl_context) as server:
+        print ('Server : ' + HOST + ', Account : ' + USERNAME + ', Mode : ' + BACKUP)
         server.login(USERNAME, PASSWORD)
-        backuped = 0
-        folderpath = BuildPath(HOST, USERNAME, cfolder)
-        if (BACKUP == "RESET"):
-            RemoveExistingBackup(folderpath)
-
-        select_info = server.select_folder(cfolder, readonly=True)
-        print ('Folder : ' + cfolder)
-        print("\t" + '%s messages found' % (select_info[b'EXISTS']))
-
-        messages = server.search() # [b'NOT', b'DELETED']
-        for uid, message_data in server.fetch(messages, "RFC822").items():
-            fil = bytearray();
-            fil = message_data[b"RFC822"]
-
-            filename = folderpath + BuildFilename(fil)
-            if (BACKUP == "RESET") or (os.path.isfile(filename)==False):
-                fout = open(filename, 'wb')
-                fout.write(fil)
-                fout.close()
-                backuped += 1
-
+        print ('Found folders: ')
+        folders = server.list_folders()
+        for folder in folders:
+            print ("\t" + folder[2])
         server.logout()
-        print("\t" + '%s messages saved' % (backuped))
 
+    for cfolder in FOLDERS:
+        with IMAPClient(HOST, ssl_context=ssl_context) as server:
+            server.login(USERNAME, PASSWORD)
+            backuped = 0
+            folderpath = BuildPath(HOST, USERNAME, cfolder['name'])
+            if (BACKUP == "RESET"):
+                RemoveExistingBackup(folderpath)
+
+            select_info = server.select_folder(cfolder['name'], readonly=True)
+            print ('Folder : ' + cfolder['name'])
+            print("\t" + '%s messages found' % (select_info[b'EXISTS']))
+
+            messages = server.search() # [b'NOT', b'DELETED']
+            for uid, message_data in server.fetch(messages, "RFC822").items():
+                fil = bytearray();
+                fil = message_data[b"RFC822"]
+
+                filename = folderpath + BuildFilename(fil)
+                if (BACKUP == "RESET") or (os.path.isfile(filename)==False):
+                    fout = open(filename, 'wb')
+                    fout.write(fil)
+                    fout.close()
+                    backuped += 1
+
+            server.logout()
+            print("\t" + '%s messages saved' % (backuped))
+
+# Closing file
+f.close()
