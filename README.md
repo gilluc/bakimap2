@@ -49,4 +49,22 @@ pip install IMAPClient
 - after downloading bakimap.py, you have to set some parameters in bakimap2.json (as usual) before using it
 
 ```
+{
+    "imap_accounts": [
+        {
+            "HOST"     : "imap.me.com",
+            "USERNAME" : "me@me.com",
+            "PASSWORD" : "$$##$$",
+            "FOLDERS"  : [ { "name": "INBOX" }, { "name": "Sent" } ],
+            "BACKUP"   : "NEW"
+        },
+        {
+            "HOST"     : "imap.you.com",
+            "USERNAME" : "you@you.com",
+            "PASSWORD" : "$$##$$",
+            "FOLDERS"  : [ { "name": "INBOX" } ],
+            "BACKUP"   : "NEW"
+        }
+    ]
+}
 ```
