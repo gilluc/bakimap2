@@ -46,7 +46,10 @@ pip install IMAPClient
 ```
 
 # now it's up to you
-- after downloading bakimap.py, you have to set some parameters in bakimap2.json (as usual) before using it
+After downloading bakimap.py, you have to set some parameters in bakimap2.json (as usual) before using it!
+Remember : 
+- "NEW" backup mode only saves new messages from last run (like incremental backup) : recommended!
+- "RESET" backup mode delete existing saved messages and saves all messages found on IMAP host to mirror the folders account (mainly for me when testing)
 
 ```
 {
