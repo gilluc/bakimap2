@@ -9,6 +9,8 @@ D:\GILLES\CIMAP>py bakimap2.py another_file.json
 Example of first run output :
 ```
 D:\GILLES\CIMAP>py bakimap2.py
+Loading details from bakimap2.json
+--------------------------------------------------------------
 Server : imap.me.com, Account : me@me.com, Mode : NEW
 Found folders:
         Spam
@@ -24,7 +26,7 @@ Folder : INBOX
 Folder : Sent
         55 messages found
         55 messages saved
-----------------------------------------
+--------------------------------------------------------------
 Server : imap.you.com, Account : you@you.com, Mode : NEW
 Found folders:
         Spam
@@ -33,7 +35,7 @@ Found folders:
 Folder : INBOX
         44 messages found
         44 messages saved
-----------------------------------------
+--------------------------------------------------------------
 D:\GILLES\CIMAP>
 ```
 

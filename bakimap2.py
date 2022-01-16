@@ -107,6 +107,8 @@ def BuildFilename(body):
 jsonfile = 'bakimap2.json'
 if len( sys.argv ) == 2:
     jsonfile = sys.argv[1]
+print('Loading details from ' + jsonfile)
+print('--------------------------------------------------------------')
 
 ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
@@ -158,7 +160,7 @@ for account in accounts['imap_accounts']:
 
             server.logout()
             print("\t" + '%s messages saved' % (backuped))
-            print ('--------------------------------------------------------------')
+            print('--------------------------------------------------------------')
 
 # Closing file
 f.close()
